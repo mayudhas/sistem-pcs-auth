@@ -30,6 +30,12 @@ export class ManageAccountAppUseCase {
       throw new NotFoundException('Akun tidak ditemukan');
     }
 
+    if (account.auth_username === 'superadmin') {
+      throw new BadRequestException(
+        'Akun superadmin utama SSO tidak dapat di-mapping langsung ke aplikasi satelit. Gunakan akun khusus pegawai atau admin aplikasi.',
+      );
+    }
+
     const app = await this.appRepo.getById(dto.app_id);
     if (!app) {
       throw new NotFoundException(`Aplikasi '${dto.app_id}' tidak ditemukan`);
