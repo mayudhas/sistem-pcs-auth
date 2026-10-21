@@ -101,13 +101,16 @@ export class ManageAccountAppUseCase {
     return this.accountAppRepo.delete(accountAppId);
   }
 
-  async getByUser(authId: string): Promise<AuthAccountApp[]> {
+  async getByUser(authId: string): Promise<any[]> {
     return this.accountAppRepo.findByAuthId(authId);
   }
 
-  async toggleActive(accountAppId: string, isActive: boolean): Promise<boolean> {
-    const assignments = await this.accountAppRepo.findByAuthId(accountAppId);
-    // fallback by ID
-    return Boolean(assignments);
+  async toggleActive(accountAppId: string): Promise<AuthAccountApp> {
+    const existing = await this.accountAppRepo.findById(accountAppId);
+    if (!existing) {
+      throw new NotFoundException('Mapping akun aplikasi tidak ditemukan');
+    }
+    existing.is_active = !existing.is_active;
+    return this.accountAppRepo.update(existing);
   }
 }

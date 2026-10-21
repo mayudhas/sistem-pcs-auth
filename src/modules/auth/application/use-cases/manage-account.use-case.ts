@@ -5,12 +5,14 @@ import { AUTH_ACCOUNT_REPOSITORY_TOKEN } from '../../domain/repositories/auth-ac
 import type { AuthAccountRepository } from '../../domain/repositories/auth-account.repository';
 import { AuthAccount } from '../../domain/entities/auth-account.entity';
 import { CreateAccountDto, ResetPasswordDto } from '../dtos/account.dto';
+import { PrismaService } from '../../../../infrastructure/database/prisma/prisma.service';
 
 @Injectable()
 export class ManageAccountUseCase {
   constructor(
     @Inject(AUTH_ACCOUNT_REPOSITORY_TOKEN)
     private readonly accountRepo: AuthAccountRepository,
+    private readonly prisma: PrismaService,
   ) {}
 
   async create(dto: CreateAccountDto): Promise<AuthAccount> {
@@ -50,8 +52,22 @@ export class ManageAccountUseCase {
       throw new NotFoundException('Akun tidak ditemukan');
     }
 
-    account.auth_is_active = !account.auth_is_active;
-    return this.accountRepo.update(account);
+    const nextState = !account.auth_is_active;
+    account.auth_is_active = nextState;
+    const updatedAccount = await this.accountRepo.update(account);
+
+    // Kaskade aturan: Jika user SSO dinonaktifkan, semua mapping app dinonaktifkan juga
+    if (!nextState) {
+      await this.prisma.authAccountApp.updateMany({
+        where: { auth_id: authId },
+        data: {
+          is_active: false,
+          updated_at: new Date(),
+        },
+      });
+    }
+
+    return updatedAccount;
   }
 
   async getAll(): Promise<AuthAccount[]> {

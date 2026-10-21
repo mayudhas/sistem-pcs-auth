@@ -42,6 +42,17 @@ export class AccountAppController {
     };
   }
 
+  @Patch(':accountAppId/toggle-active')
+  @ApiOperation({ summary: 'Aktifkan / Nonaktifkan Akses Pengguna pada Suatu Aplikasi' })
+  async toggleActive(@Param('accountAppId') accountAppId: string) {
+    const result = await this.manageAccountAppUseCase.toggleActive(accountAppId);
+    return {
+      statusCode: HttpStatus.OK,
+      message: `Akses pengguna pada aplikasi berhasil di-${result.is_active ? 'aktifkan' : 'nonaktifkan'}`,
+      data: result,
+    };
+  }
+
   @Get('app/:appId')
   @ApiOperation({ summary: 'Daftar Semua User/Pegawai yang Di-mapping ke Suatu Aplikasi' })
   async getByApp(@Param('appId') appId: string) {
