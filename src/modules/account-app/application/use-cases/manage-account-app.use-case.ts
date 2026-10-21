@@ -54,9 +54,9 @@ export class ManageAccountAppUseCase {
 
     const existing = await this.accountAppRepo.findByAuthIdAndAppId(dto.auth_id, dto.app_id);
     if (existing) {
-      existing.app_role = dto.app_role;
-      existing.is_active = true;
-      return this.accountAppRepo.update(existing);
+      throw new BadRequestException(
+        `User '${account.auth_username}' sudah di-mapping ke aplikasi '${app.app_nama}' dengan role '${existing.app_role}'.`,
+      );
     }
 
     const newAssignment = new AuthAccountApp({
@@ -70,6 +70,14 @@ export class ManageAccountAppUseCase {
     });
 
     return this.accountAppRepo.create(newAssignment);
+  }
+
+  async getByApp(appId: string): Promise<any[]> {
+    return this.accountAppRepo.findByAppId(appId);
+  }
+
+  async delete(accountAppId: string): Promise<boolean> {
+    return this.accountAppRepo.delete(accountAppId);
   }
 
   async getByUser(authId: string): Promise<AuthAccountApp[]> {

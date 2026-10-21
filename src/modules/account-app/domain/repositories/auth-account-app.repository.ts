@@ -6,7 +6,7 @@ export interface AuthAccountAppRepository {
   create(accountApp: AuthAccountApp): Promise<AuthAccountApp>;
   findByAuthIdAndAppId(authId: string, appId: string): Promise<AuthAccountApp | null>;
   findByAuthId(authId: string): Promise<AuthAccountApp[]>;
-  findByAppId(appId: string): Promise<AuthAccountApp[]>;
+  findByAppId(appId: string): Promise<any[]>;
   update(accountApp: AuthAccountApp): Promise<AuthAccountApp>;
   delete(id: string): Promise<boolean>;
 }

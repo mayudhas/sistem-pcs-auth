@@ -33,11 +33,24 @@ export class PrismaAuthAccountAppRepository implements AuthAccountAppRepository 
     return records.map((r) => AuthAccountAppMapper.toDomain(r));
   }
 
-  async findByAppId(appId: string): Promise<AuthAccountApp[]> {
+  async findByAppId(appId: string): Promise<any[]> {
     const records = await this.prisma.authAccountApp.findMany({
       where: { app_id: appId },
+      include: {
+        account: {
+          select: {
+            auth_id: true,
+            auth_username: true,
+            auth_is_active: true,
+          },
+        },
+      },
+      orderBy: { created_at: 'desc' },
     });
-    return records.map((r) => AuthAccountAppMapper.toDomain(r));
+    return records.map((r) => ({
+      ...AuthAccountAppMapper.toDomain(r),
+      account: r.account,
+    }));
   }
 
   async update(accountApp: AuthAccountApp): Promise<AuthAccountApp> {

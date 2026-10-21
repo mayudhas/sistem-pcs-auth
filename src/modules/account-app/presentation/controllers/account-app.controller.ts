@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Get, Delete, Param, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ManageAccountAppUseCase } from '../../application/use-cases/manage-account-app.use-case';
 import { AssignAppAccessDto } from '../../application/dtos/assign-app-access.dto';
@@ -27,6 +27,26 @@ export class AccountAppController {
     return {
       statusCode: HttpStatus.OK,
       data: result,
+    };
+  }
+
+  @Get('app/:appId')
+  @ApiOperation({ summary: 'Daftar Semua User/Pegawai yang Di-mapping ke Suatu Aplikasi' })
+  async getByApp(@Param('appId') appId: string) {
+    const result = await this.manageAccountAppUseCase.getByApp(appId);
+    return {
+      statusCode: HttpStatus.OK,
+      data: result,
+    };
+  }
+
+  @Delete(':accountAppId')
+  @ApiOperation({ summary: 'Cabut Hak Akses User dari Suatu Aplikasi' })
+  async delete(@Param('accountAppId') accountAppId: string) {
+    await this.manageAccountAppUseCase.delete(accountAppId);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Hak akses aplikasi berhasil dicabut',
     };
   }
 }
