@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   AuthAccount: 'AuthAccount',
   AuthApp: 'AuthApp',
+  AuthAppRole: 'AuthAppRole',
   AuthAccountApp: 'AuthAccountApp',
   AuthSession: 'AuthSession'
 } as const
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "authAccount" | "authApp" | "authAccountApp" | "authSession"
+    modelProps: "authAccount" | "authApp" | "authAppRole" | "authAccountApp" | "authSession"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -565,6 +566,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AuthAppCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AuthAppCountAggregateOutputType> | number
+        }
+      }
+    }
+    AuthAppRole: {
+      payload: Prisma.$AuthAppRolePayload<ExtArgs>
+      fields: Prisma.AuthAppRoleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthAppRoleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthAppRoleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>
+        }
+        findFirst: {
+          args: Prisma.AuthAppRoleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthAppRoleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>
+        }
+        findMany: {
+          args: Prisma.AuthAppRoleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>[]
+        }
+        create: {
+          args: Prisma.AuthAppRoleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>
+        }
+        createMany: {
+          args: Prisma.AuthAppRoleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthAppRoleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>[]
+        }
+        delete: {
+          args: Prisma.AuthAppRoleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>
+        }
+        update: {
+          args: Prisma.AuthAppRoleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthAppRoleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthAppRoleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthAppRoleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthAppRoleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAppRolePayload>
+        }
+        aggregate: {
+          args: Prisma.AuthAppRoleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthAppRole>
+        }
+        groupBy: {
+          args: Prisma.AuthAppRoleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthAppRoleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthAppRoleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthAppRoleCountAggregateOutputType> | number
         }
       }
     }
@@ -779,6 +854,20 @@ export const AuthAppScalarFieldEnum = {
 } as const
 
 export type AuthAppScalarFieldEnum = (typeof AuthAppScalarFieldEnum)[keyof typeof AuthAppScalarFieldEnum]
+
+
+export const AuthAppRoleScalarFieldEnum = {
+  role_id: 'role_id',
+  app_id: 'app_id',
+  role_code: 'role_code',
+  role_nama: 'role_nama',
+  role_deskripsi: 'role_deskripsi',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type AuthAppRoleScalarFieldEnum = (typeof AuthAppRoleScalarFieldEnum)[keyof typeof AuthAppRoleScalarFieldEnum]
 
 
 export const AuthAccountAppScalarFieldEnum = {
@@ -1039,6 +1128,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   authAccount?: Prisma.AuthAccountOmit
   authApp?: Prisma.AuthAppOmit
+  authAppRole?: Prisma.AuthAppRoleOmit
   authAccountApp?: Prisma.AuthAccountAppOmit
   authSession?: Prisma.AuthSessionOmit
 }

@@ -199,6 +199,7 @@ export type AuthAppWhereInput = {
   app_created_at?: Prisma.DateTimeFilter<"AuthApp"> | Date | string
   app_updated_at?: Prisma.DateTimeFilter<"AuthApp"> | Date | string
   account_apps?: Prisma.AuthAccountAppListRelationFilter
+  roles?: Prisma.AuthAppRoleListRelationFilter
 }
 
 export type AuthAppOrderByWithRelationInput = {
@@ -210,6 +211,7 @@ export type AuthAppOrderByWithRelationInput = {
   app_created_at?: Prisma.SortOrder
   app_updated_at?: Prisma.SortOrder
   account_apps?: Prisma.AuthAccountAppOrderByRelationAggregateInput
+  roles?: Prisma.AuthAppRoleOrderByRelationAggregateInput
 }
 
 export type AuthAppWhereUniqueInput = Prisma.AtLeast<{
@@ -224,6 +226,7 @@ export type AuthAppWhereUniqueInput = Prisma.AtLeast<{
   app_created_at?: Prisma.DateTimeFilter<"AuthApp"> | Date | string
   app_updated_at?: Prisma.DateTimeFilter<"AuthApp"> | Date | string
   account_apps?: Prisma.AuthAccountAppListRelationFilter
+  roles?: Prisma.AuthAppRoleListRelationFilter
 }, "app_id">
 
 export type AuthAppOrderByWithAggregationInput = {
@@ -261,6 +264,7 @@ export type AuthAppCreateInput = {
   app_created_at?: Date | string
   app_updated_at?: Date | string
   account_apps?: Prisma.AuthAccountAppCreateNestedManyWithoutAppInput
+  roles?: Prisma.AuthAppRoleCreateNestedManyWithoutAppInput
 }
 
 export type AuthAppUncheckedCreateInput = {
@@ -272,6 +276,7 @@ export type AuthAppUncheckedCreateInput = {
   app_created_at?: Date | string
   app_updated_at?: Date | string
   account_apps?: Prisma.AuthAccountAppUncheckedCreateNestedManyWithoutAppInput
+  roles?: Prisma.AuthAppRoleUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AuthAppUpdateInput = {
@@ -283,6 +288,7 @@ export type AuthAppUpdateInput = {
   app_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   app_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account_apps?: Prisma.AuthAccountAppUpdateManyWithoutAppNestedInput
+  roles?: Prisma.AuthAppRoleUpdateManyWithoutAppNestedInput
 }
 
 export type AuthAppUncheckedUpdateInput = {
@@ -294,6 +300,7 @@ export type AuthAppUncheckedUpdateInput = {
   app_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   app_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account_apps?: Prisma.AuthAccountAppUncheckedUpdateManyWithoutAppNestedInput
+  roles?: Prisma.AuthAppRoleUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AuthAppCreateManyInput = {
@@ -365,6 +372,20 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type AuthAppCreateNestedOneWithoutRolesInput = {
+  create?: Prisma.XOR<Prisma.AuthAppCreateWithoutRolesInput, Prisma.AuthAppUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.AuthAppCreateOrConnectWithoutRolesInput
+  connect?: Prisma.AuthAppWhereUniqueInput
+}
+
+export type AuthAppUpdateOneRequiredWithoutRolesNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthAppCreateWithoutRolesInput, Prisma.AuthAppUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.AuthAppCreateOrConnectWithoutRolesInput
+  upsert?: Prisma.AuthAppUpsertWithoutRolesInput
+  connect?: Prisma.AuthAppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthAppUpdateToOneWithWhereWithoutRolesInput, Prisma.AuthAppUpdateWithoutRolesInput>, Prisma.AuthAppUncheckedUpdateWithoutRolesInput>
+}
+
 export type AuthAppCreateNestedOneWithoutAccount_appsInput = {
   create?: Prisma.XOR<Prisma.AuthAppCreateWithoutAccount_appsInput, Prisma.AuthAppUncheckedCreateWithoutAccount_appsInput>
   connectOrCreate?: Prisma.AuthAppCreateOrConnectWithoutAccount_appsInput
@@ -379,6 +400,66 @@ export type AuthAppUpdateOneRequiredWithoutAccount_appsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuthAppUpdateToOneWithWhereWithoutAccount_appsInput, Prisma.AuthAppUpdateWithoutAccount_appsInput>, Prisma.AuthAppUncheckedUpdateWithoutAccount_appsInput>
 }
 
+export type AuthAppCreateWithoutRolesInput = {
+  app_id: string
+  app_nama: string
+  app_deskripsi?: string | null
+  app_redirect_uri?: string | null
+  app_is_active?: boolean
+  app_created_at?: Date | string
+  app_updated_at?: Date | string
+  account_apps?: Prisma.AuthAccountAppCreateNestedManyWithoutAppInput
+}
+
+export type AuthAppUncheckedCreateWithoutRolesInput = {
+  app_id: string
+  app_nama: string
+  app_deskripsi?: string | null
+  app_redirect_uri?: string | null
+  app_is_active?: boolean
+  app_created_at?: Date | string
+  app_updated_at?: Date | string
+  account_apps?: Prisma.AuthAccountAppUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AuthAppCreateOrConnectWithoutRolesInput = {
+  where: Prisma.AuthAppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthAppCreateWithoutRolesInput, Prisma.AuthAppUncheckedCreateWithoutRolesInput>
+}
+
+export type AuthAppUpsertWithoutRolesInput = {
+  update: Prisma.XOR<Prisma.AuthAppUpdateWithoutRolesInput, Prisma.AuthAppUncheckedUpdateWithoutRolesInput>
+  create: Prisma.XOR<Prisma.AuthAppCreateWithoutRolesInput, Prisma.AuthAppUncheckedCreateWithoutRolesInput>
+  where?: Prisma.AuthAppWhereInput
+}
+
+export type AuthAppUpdateToOneWithWhereWithoutRolesInput = {
+  where?: Prisma.AuthAppWhereInput
+  data: Prisma.XOR<Prisma.AuthAppUpdateWithoutRolesInput, Prisma.AuthAppUncheckedUpdateWithoutRolesInput>
+}
+
+export type AuthAppUpdateWithoutRolesInput = {
+  app_id?: Prisma.StringFieldUpdateOperationsInput | string
+  app_nama?: Prisma.StringFieldUpdateOperationsInput | string
+  app_deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app_redirect_uri?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  app_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  app_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_apps?: Prisma.AuthAccountAppUpdateManyWithoutAppNestedInput
+}
+
+export type AuthAppUncheckedUpdateWithoutRolesInput = {
+  app_id?: Prisma.StringFieldUpdateOperationsInput | string
+  app_nama?: Prisma.StringFieldUpdateOperationsInput | string
+  app_deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app_redirect_uri?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  app_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  app_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_apps?: Prisma.AuthAccountAppUncheckedUpdateManyWithoutAppNestedInput
+}
+
 export type AuthAppCreateWithoutAccount_appsInput = {
   app_id: string
   app_nama: string
@@ -387,6 +468,7 @@ export type AuthAppCreateWithoutAccount_appsInput = {
   app_is_active?: boolean
   app_created_at?: Date | string
   app_updated_at?: Date | string
+  roles?: Prisma.AuthAppRoleCreateNestedManyWithoutAppInput
 }
 
 export type AuthAppUncheckedCreateWithoutAccount_appsInput = {
@@ -397,6 +479,7 @@ export type AuthAppUncheckedCreateWithoutAccount_appsInput = {
   app_is_active?: boolean
   app_created_at?: Date | string
   app_updated_at?: Date | string
+  roles?: Prisma.AuthAppRoleUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AuthAppCreateOrConnectWithoutAccount_appsInput = {
@@ -423,6 +506,7 @@ export type AuthAppUpdateWithoutAccount_appsInput = {
   app_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   app_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   app_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.AuthAppRoleUpdateManyWithoutAppNestedInput
 }
 
 export type AuthAppUncheckedUpdateWithoutAccount_appsInput = {
@@ -433,6 +517,7 @@ export type AuthAppUncheckedUpdateWithoutAccount_appsInput = {
   app_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   app_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   app_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.AuthAppRoleUncheckedUpdateManyWithoutAppNestedInput
 }
 
 
@@ -442,10 +527,12 @@ export type AuthAppUncheckedUpdateWithoutAccount_appsInput = {
 
 export type AuthAppCountOutputType = {
   account_apps: number
+  roles: number
 }
 
 export type AuthAppCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account_apps?: boolean | AuthAppCountOutputTypeCountAccount_appsArgs
+  roles?: boolean | AuthAppCountOutputTypeCountRolesArgs
 }
 
 /**
@@ -465,6 +552,13 @@ export type AuthAppCountOutputTypeCountAccount_appsArgs<ExtArgs extends runtime.
   where?: Prisma.AuthAccountAppWhereInput
 }
 
+/**
+ * AuthAppCountOutputType without action
+ */
+export type AuthAppCountOutputTypeCountRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuthAppRoleWhereInput
+}
+
 
 export type AuthAppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   app_id?: boolean
@@ -475,6 +569,7 @@ export type AuthAppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   app_created_at?: boolean
   app_updated_at?: boolean
   account_apps?: boolean | Prisma.AuthApp$account_appsArgs<ExtArgs>
+  roles?: boolean | Prisma.AuthApp$rolesArgs<ExtArgs>
   _count?: boolean | Prisma.AuthAppCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["authApp"]>
 
@@ -511,6 +606,7 @@ export type AuthAppSelectScalar = {
 export type AuthAppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"app_id" | "app_nama" | "app_deskripsi" | "app_redirect_uri" | "app_is_active" | "app_created_at" | "app_updated_at", ExtArgs["result"]["authApp"]>
 export type AuthAppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account_apps?: boolean | Prisma.AuthApp$account_appsArgs<ExtArgs>
+  roles?: boolean | Prisma.AuthApp$rolesArgs<ExtArgs>
   _count?: boolean | Prisma.AuthAppCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AuthAppIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -520,6 +616,7 @@ export type $AuthAppPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "AuthApp"
   objects: {
     account_apps: Prisma.$AuthAccountAppPayload<ExtArgs>[]
+    roles: Prisma.$AuthAppRolePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     app_id: string
@@ -924,6 +1021,7 @@ readonly fields: AuthAppFieldRefs;
 export interface Prisma__AuthAppClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   account_apps<T extends Prisma.AuthApp$account_appsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuthApp$account_appsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthAccountAppPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roles<T extends Prisma.AuthApp$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuthApp$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthAppRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1374,6 +1472,30 @@ export type AuthApp$account_appsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.AuthAccountAppScalarFieldEnum | Prisma.AuthAccountAppScalarFieldEnum[]
+}
+
+/**
+ * AuthApp.roles
+ */
+export type AuthApp$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuthAppRole
+   */
+  select?: Prisma.AuthAppRoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuthAppRole
+   */
+  omit?: Prisma.AuthAppRoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuthAppRoleInclude<ExtArgs> | null
+  where?: Prisma.AuthAppRoleWhereInput
+  orderBy?: Prisma.AuthAppRoleOrderByWithRelationInput | Prisma.AuthAppRoleOrderByWithRelationInput[]
+  cursor?: Prisma.AuthAppRoleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuthAppRoleScalarFieldEnum | Prisma.AuthAppRoleScalarFieldEnum[]
 }
 
 /**

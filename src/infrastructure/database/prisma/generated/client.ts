@@ -50,6 +50,11 @@ export type AuthAccount = Prisma.AuthAccountModel
  */
 export type AuthApp = Prisma.AuthAppModel
 /**
+ * Model AuthAppRole
+ * 
+ */
+export type AuthAppRole = Prisma.AuthAppRoleModel
+/**
  * Model AuthAccountApp
  * 
  */

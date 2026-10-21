@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   AuthAccount: 'AuthAccount',
   AuthApp: 'AuthApp',
+  AuthAppRole: 'AuthAppRole',
   AuthAccountApp: 'AuthAccountApp',
   AuthSession: 'AuthSession'
 } as const
@@ -97,6 +98,20 @@ export const AuthAppScalarFieldEnum = {
 } as const
 
 export type AuthAppScalarFieldEnum = (typeof AuthAppScalarFieldEnum)[keyof typeof AuthAppScalarFieldEnum]
+
+
+export const AuthAppRoleScalarFieldEnum = {
+  role_id: 'role_id',
+  app_id: 'app_id',
+  role_code: 'role_code',
+  role_nama: 'role_nama',
+  role_deskripsi: 'role_deskripsi',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type AuthAppRoleScalarFieldEnum = (typeof AuthAppRoleScalarFieldEnum)[keyof typeof AuthAppRoleScalarFieldEnum]
 
 
 export const AuthAccountAppScalarFieldEnum = {

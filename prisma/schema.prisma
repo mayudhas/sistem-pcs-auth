@@ -34,8 +34,27 @@ model AuthApp {
 
   // Relations
   account_apps      AuthAccountApp[]
+  roles             AuthAppRole[]
 
   @@map("auth_app")
+}
+
+model AuthAppRole {
+  role_id        String      @id @db.Uuid
+  app_id         String      @db.VarChar(50)
+  role_code      String      @db.VarChar(50) // contoh: 'SUPERADMIN', 'ADMIN_HR', 'STAFF'
+  role_nama      String      @db.VarChar(100)
+  role_deskripsi String?     @db.Text
+  is_active      Boolean     @default(true)
+  created_at     DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime    @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  app            AuthApp     @relation(fields: [app_id], references: [app_id], onDelete: Cascade)
+
+  @@unique([app_id, role_code])
+  @@index([app_id])
+  @@map("auth_app_role")
 }
 
 model AuthAccountApp {

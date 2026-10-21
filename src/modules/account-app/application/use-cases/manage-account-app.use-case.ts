@@ -1,9 +1,11 @@
-import { Injectable, NotFoundException, Inject } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { AUTH_ACCOUNT_APP_REPOSITORY_TOKEN } from '../../domain/repositories/auth-account-app.repository';
 import type { AuthAccountAppRepository } from '../../domain/repositories/auth-account-app.repository';
 import { AUTH_APP_REPOSITORY_TOKEN } from '../../../app/domain/repositories/auth-app.repository';
 import type { AuthAppRepository } from '../../../app/domain/repositories/auth-app.repository';
+import { AUTH_APP_ROLE_REPOSITORY_TOKEN } from '../../../app/domain/repositories/auth-app-role.repository';
+import type { AuthAppRoleRepository } from '../../../app/domain/repositories/auth-app-role.repository';
 import { AUTH_ACCOUNT_REPOSITORY_TOKEN } from '../../../auth/domain/repositories/auth-account.repository';
 import type { AuthAccountRepository } from '../../../auth/domain/repositories/auth-account.repository';
 import { AuthAccountApp } from '../../domain/entities/auth-account-app.entity';
@@ -18,6 +20,8 @@ export class ManageAccountAppUseCase {
     private readonly accountRepo: AuthAccountRepository,
     @Inject(AUTH_APP_REPOSITORY_TOKEN)
     private readonly appRepo: AuthAppRepository,
+    @Inject(AUTH_APP_ROLE_REPOSITORY_TOKEN)
+    private readonly roleRepo: AuthAppRoleRepository,
   ) {}
 
   async assign(dto: AssignAppAccessDto): Promise<AuthAccountApp> {
@@ -29,6 +33,17 @@ export class ManageAccountAppUseCase {
     const app = await this.appRepo.getById(dto.app_id);
     if (!app) {
       throw new NotFoundException(`Aplikasi '${dto.app_id}' tidak ditemukan`);
+    }
+
+    // Validasi apakah role terdaftar di aplikasi (jika aplikasi sudah mendefinisikan roles)
+    const appRoles = await this.roleRepo.getByAppId(dto.app_id);
+    if (appRoles.length > 0) {
+      const isValidRole = appRoles.some((r) => r.role_code === dto.app_role);
+      if (!isValidRole) {
+        throw new BadRequestException(
+          `Role '${dto.app_role}' tidak valid untuk aplikasi '${dto.app_id}'. Pilihan yang tersedia: ${appRoles.map((r) => r.role_code).join(', ')}`,
+        );
+      }
     }
 
     const existing = await this.accountAppRepo.findByAuthIdAndAppId(dto.auth_id, dto.app_id);

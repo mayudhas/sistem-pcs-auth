@@ -10,6 +10,7 @@
  */
 export type * from './models/AuthAccount.js'
 export type * from './models/AuthApp.js'
+export type * from './models/AuthAppRole.js'
 export type * from './models/AuthAccountApp.js'
 export type * from './models/AuthSession.js'
 export type * from './commonInputTypes.js'
