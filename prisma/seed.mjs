@@ -27,46 +27,88 @@ async function seed() {
   try {
     console.log('[SEED] Seeding SSO Auth Service...');
 
-    // 1. Upsert App 'sistem-pcs'
+    // 1. Bersihkan sisa referensi lama sistem-pcs jika ada
+    await client.query(`DELETE FROM "auth_account_app" WHERE app_id = 'sistem-pcs';`);
+    await client.query(`DELETE FROM "auth_app" WHERE app_id = 'sistem-pcs';`);
+
+    // 2. Register Aplikasi Kantor Virtual
     await client.query(`
       INSERT INTO "auth_app" (app_id, app_nama, app_deskripsi, app_is_active, app_created_at, app_updated_at)
-      VALUES ('sistem-pcs', 'Sistem PCS (Struktur Organisasi & Kepegawaian)', 'Master Data Organisasi & Posisi', true, NOW(), NOW())
-      ON CONFLICT (app_id) DO NOTHING;
+      VALUES ('kantor-virtual', 'Kantor Virtual', 'Corporate Workspace & Business Administration', true, NOW(), NOW())
+      ON CONFLICT (app_id) DO UPDATE SET
+        app_nama = EXCLUDED.app_nama,
+        app_deskripsi = EXCLUDED.app_deskripsi,
+        app_is_active = true,
+        app_updated_at = NOW();
     `);
-    console.log('[SEED] App registered: sistem-pcs');
+    console.log('[SEED] App registered: kantor-virtual');
 
-    // 2. Upsert Superadmin
-    const username = 'superadmin';
-    const passwordHash = await argon2.hash('123123123');
-    let authId;
+    // 3. Upsert Superadmin SSO (Password default: 123123123)
+    const superadminUsername = 'superadmin';
+    const superadminPasswordHash = await argon2.hash('123123123');
+    let superadminId;
 
-    const existing = await client.query('SELECT auth_id FROM "auth_account" WHERE auth_username = $1', [username]);
-    if (existing.rows.length > 0) {
-      authId = existing.rows[0].auth_id;
-      await client.query('UPDATE "auth_account" SET auth_password_hash = $1 WHERE auth_id = $2', [passwordHash, authId]);
-      console.log(`[SEED] Superadmin account updated: ${username} (${authId})`);
-    } else {
-      authId = generateUUIDv7();
+    const existingSuperadmin = await client.query('SELECT auth_id FROM "auth_account" WHERE auth_username = $1', [superadminUsername]);
+    if (existingSuperadmin.rows.length > 0) {
+      superadminId = existingSuperadmin.rows[0].auth_id;
       await client.query(`
-        INSERT INTO "auth_account" (auth_id, auth_username, auth_password_hash, auth_is_active, auth_created_at, auth_updated_at)
-        VALUES ($1, $2, $3, true, NOW(), NOW())
-      `, [authId, username, passwordHash]);
-      console.log(`[SEED] Superadmin account created: ${username} (${authId})`);
+        UPDATE "auth_account" 
+        SET auth_password_hash = $1, auth_is_superadmin = true, auth_is_active = true, auth_updated_at = NOW()
+        WHERE auth_id = $2
+      `, [superadminPasswordHash, superadminId]);
+      console.log(`[SEED] Superadmin account updated: ${superadminUsername} (${superadminId})`);
+    } else {
+      superadminId = generateUUIDv7();
+      await client.query(`
+        INSERT INTO "auth_account" (auth_id, auth_username, auth_password_hash, auth_is_superadmin, auth_is_active, auth_created_at, auth_updated_at)
+        VALUES ($1, $2, $3, true, true, NOW(), NOW())
+      `, [superadminId, superadminUsername, superadminPasswordHash]);
+      console.log(`[SEED] Superadmin account created: ${superadminUsername} (${superadminId})`);
     }
 
-    // 3. Upsert Role Superadmin di sistem-pcs
+    // 4. Upsert User Pegawai Kantor Virtual (mayudhas / 123123123)
+    const employeeUsername = 'mayudhas';
+    const employeePasswordHash = await argon2.hash('123123123');
+    let employeeId;
+
+    const existingEmployee = await client.query('SELECT auth_id FROM "auth_account" WHERE auth_username = $1', [employeeUsername]);
+    if (existingEmployee.rows.length > 0) {
+      employeeId = existingEmployee.rows[0].auth_id;
+      await client.query(`
+        UPDATE "auth_account"
+        SET auth_password_hash = $1, auth_is_active = true, auth_updated_at = NOW()
+        WHERE auth_id = $2
+      `, [employeePasswordHash, employeeId]);
+      console.log(`[SEED] Employee account updated: ${employeeUsername} (${employeeId})`);
+    } else {
+      employeeId = generateUUIDv7();
+      await client.query(`
+        INSERT INTO "auth_account" (auth_id, auth_username, auth_password_hash, auth_is_superadmin, auth_is_active, auth_created_at, auth_updated_at)
+        VALUES ($1, $2, $3, false, true, NOW(), NOW())
+      `, [employeeId, employeeUsername, employeePasswordHash]);
+      console.log(`[SEED] Employee account created: ${employeeUsername} (${employeeId})`);
+    }
+
+    // 5. Tetapkan Role SUPERADMIN Kantor Virtual untuk mayudhas
     const existingAssign = await client.query(
       'SELECT account_app_id FROM "auth_account_app" WHERE auth_id = $1 AND app_id = $2',
-      [authId, 'sistem-pcs']
+      [employeeId, 'kantor-virtual']
     );
 
     if (existingAssign.rows.length === 0) {
       const accountAppId = generateUUIDv7();
       await client.query(`
         INSERT INTO "auth_account_app" (account_app_id, auth_id, app_id, app_role, is_active, created_at, updated_at)
-        VALUES ($1, $2, 'sistem-pcs', 'SUPERADMIN', true, NOW(), NOW())
-      `, [accountAppId, authId]);
-      console.log('[SEED] Assigned superadmin to sistem-pcs with role SUPERADMIN');
+        VALUES ($1, $2, 'kantor-virtual', 'SUPERADMIN', true, NOW(), NOW())
+      `, [accountAppId, employeeId]);
+      console.log('[SEED] Assigned mayudhas to kantor-virtual with role SUPERADMIN');
+    } else {
+      await client.query(`
+        UPDATE "auth_account_app"
+        SET app_role = 'SUPERADMIN', is_active = true, updated_at = NOW()
+        WHERE auth_id = $1 AND app_id = $2
+      `, [employeeId, 'kantor-virtual']);
+      console.log('[SEED] Verified mayudhas assignment to kantor-virtual');
     }
 
     console.log('[SEED] SSO Auth Seeding selesai!');
