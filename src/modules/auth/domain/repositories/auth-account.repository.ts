@@ -6,6 +6,7 @@ export interface AuthAccountRepository {
   create(account: AuthAccount): Promise<AuthAccount>;
   getById(id: string): Promise<AuthAccount | null>;
   getByUsername(username: string): Promise<AuthAccount | null>;
+  getAll(): Promise<AuthAccount[]>;
   update(account: AuthAccount): Promise<AuthAccount>;
   delete(id: string): Promise<boolean>;
 }

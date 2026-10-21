@@ -31,7 +31,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT;
+  if (!port) {
+    throw new Error('Missing required environment variable: PORT');
+  }
   await app.listen(port);
   console.log(`PCS Auth Service is running on http://localhost:${port}`);
   console.log(`Swagger Docs available at http://localhost:${port}/docs`);

@@ -43,4 +43,12 @@ export class ManageAppUseCase {
     app.app_is_active = !app.app_is_active;
     return this.appRepo.update(app);
   }
+
+  async delete(appId: string): Promise<boolean> {
+    const app = await this.appRepo.getById(appId);
+    if (!app) {
+      throw new NotFoundException('Aplikasi tidak ditemukan');
+    }
+    return this.appRepo.delete(appId);
+  }
 }

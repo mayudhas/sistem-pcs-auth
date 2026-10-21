@@ -28,6 +28,13 @@ export class PrismaAuthAccountRepository implements AuthAccountRepository {
     return record ? AuthAccountMapper.toDomain(record) : null;
   }
 
+  async getAll(): Promise<AuthAccount[]> {
+    const records = await this.prisma.authAccount.findMany({
+      orderBy: { auth_created_at: 'asc' },
+    });
+    return records.map((r) => AuthAccountMapper.toDomain(r));
+  }
+
   async update(account: AuthAccount): Promise<AuthAccount> {
     const data = AuthAccountMapper.toPersistence(account);
     const updated = await this.prisma.authAccount.update({

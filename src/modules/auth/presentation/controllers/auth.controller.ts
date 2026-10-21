@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Get, Delete, Param, Patch, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { RefreshTokenUseCase } from '../../application/use-cases/refresh-token.use-case';
@@ -65,6 +65,22 @@ export class AuthController {
     return this.cryptoTokenService.getJwks();
   }
 
+  @Get('accounts')
+  @ApiOperation({ summary: 'Daftar Semua Akun Kredensial SSO' })
+  async getAllAccounts() {
+    const accounts = await this.manageAccountUseCase.getAll();
+    return {
+      statusCode: HttpStatus.OK,
+      data: accounts.map((a) => ({
+        auth_id: a.auth_id,
+        auth_username: a.auth_username,
+        auth_is_superadmin: a.auth_is_superadmin,
+        auth_is_active: a.auth_is_active,
+        auth_created_at: a.auth_created_at,
+      })),
+    };
+  }
+
   @Post('accounts')
   @ApiOperation({ summary: 'Daftarkan Akun Kredensial Baru' })
   async createAccount(@Body() dto: CreateAccountDto) {
@@ -102,6 +118,16 @@ export class AuthController {
         auth_username: account.auth_username,
         auth_is_active: account.auth_is_active,
       },
+    };
+  }
+
+  @Delete('accounts/:authId')
+  @ApiOperation({ summary: 'Hapus Akun Kredensial SSO' })
+  async deleteAccount(@Param('authId') authId: string) {
+    await this.manageAccountUseCase.delete(authId);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Akun berhasil dihapus permanen',
     };
   }
 }

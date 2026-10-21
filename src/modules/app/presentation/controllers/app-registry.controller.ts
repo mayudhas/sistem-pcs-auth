@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Patch, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Body, Param, Patch, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ManageAppUseCase } from '../../application/use-cases/manage-app.use-case';
 import { CreateAppDto } from '../../application/dtos/create-app.dto';
@@ -38,6 +38,16 @@ export class AppRegistryController {
       statusCode: HttpStatus.OK,
       message: `Aplikasi berhasil di-${app.app_is_active ? 'aktifkan' : 'nonaktifkan'}`,
       data: app,
+    };
+  }
+
+  @Delete(':appId')
+  @ApiOperation({ summary: 'Hapus Aplikasi dari SSO Registry' })
+  async delete(@Param('appId') appId: string) {
+    await this.manageAppUseCase.delete(appId);
+    return {
+      statusCode: HttpStatus.OK,
+      message: `Aplikasi '${appId}' berhasil dihapus dari SSO`,
     };
   }
 }

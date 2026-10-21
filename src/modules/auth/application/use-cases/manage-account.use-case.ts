@@ -53,4 +53,19 @@ export class ManageAccountUseCase {
     account.auth_is_active = !account.auth_is_active;
     return this.accountRepo.update(account);
   }
+
+  async getAll(): Promise<AuthAccount[]> {
+    return this.accountRepo.getAll();
+  }
+
+  async delete(authId: string): Promise<boolean> {
+    const account = await this.accountRepo.getById(authId);
+    if (!account) {
+      throw new NotFoundException('Akun tidak ditemukan');
+    }
+    if (account.auth_username === 'superadmin') {
+      throw new ConflictException('Akun superadmin utama tidak boleh dihapus');
+    }
+    return this.accountRepo.delete(authId);
+  }
 }

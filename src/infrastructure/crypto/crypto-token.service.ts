@@ -20,7 +20,11 @@ export class CryptoTokenService implements OnModuleInit {
   private issuer: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.issuer = this.configService.get<string>('JWT_ISSUER', 'https://sso.perusahaan.com');
+    const issuer = this.configService.get<string>('JWT_ISSUER');
+    if (!issuer) {
+      throw new Error('Missing required environment variable: JWT_ISSUER');
+    }
+    this.issuer = issuer;
   }
 
   async onModuleInit() {
