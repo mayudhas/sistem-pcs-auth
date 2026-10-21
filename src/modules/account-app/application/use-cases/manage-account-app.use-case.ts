@@ -76,6 +76,27 @@ export class ManageAccountAppUseCase {
     return this.accountAppRepo.findByAppId(appId);
   }
 
+  async updateRole(accountAppId: string, newRole: string): Promise<AuthAccountApp> {
+    const existing = await this.accountAppRepo.findById(accountAppId);
+    if (!existing) {
+      throw new NotFoundException('Mapping akun aplikasi tidak ditemukan');
+    }
+
+    // Validasi apakah role terdaftar di aplikasi (jika aplikasi sudah mendefinisikan roles)
+    const appRoles = await this.roleRepo.getByAppId(existing.app_id);
+    if (appRoles.length > 0) {
+      const isValidRole = appRoles.some((r) => r.role_code === newRole);
+      if (!isValidRole) {
+        throw new BadRequestException(
+          `Role '${newRole}' tidak valid untuk aplikasi '${existing.app_id}'. Pilihan yang tersedia: ${appRoles.map((r) => r.role_code).join(', ')}`,
+        );
+      }
+    }
+
+    existing.app_role = newRole;
+    return this.accountAppRepo.update(existing);
+  }
+
   async delete(accountAppId: string): Promise<boolean> {
     return this.accountAppRepo.delete(accountAppId);
   }

@@ -66,6 +66,13 @@ export class PrismaAuthAccountAppRepository implements AuthAccountAppRepository 
     return AuthAccountAppMapper.toDomain(updated);
   }
 
+  async findById(accountAppId: string): Promise<AuthAccountApp | null> {
+    const record = await this.prisma.authAccountApp.findUnique({
+      where: { account_app_id: accountAppId },
+    });
+    return record ? AuthAccountAppMapper.toDomain(record) : null;
+  }
+
   async delete(id: string): Promise<boolean> {
     const deleted = await this.prisma.authAccountApp.delete({
       where: { account_app_id: id },

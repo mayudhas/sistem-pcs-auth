@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Get, Delete, Param, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Patch, Body, Get, Delete, Param, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ManageAccountAppUseCase } from '../../application/use-cases/manage-account-app.use-case';
 import { AssignAppAccessDto } from '../../application/dtos/assign-app-access.dto';
+import { UpdateAppRoleDto } from '../../application/dtos/update-app-role.dto';
 
 @ApiTags('IAM - App Assignment (Role User per App)')
 @Controller('account-apps')
@@ -16,6 +17,17 @@ export class AccountAppController {
     return {
       statusCode: HttpStatus.OK,
       message: 'Hak akses aplikasi berhasil ditetapkan',
+      data: result,
+    };
+  }
+
+  @Patch(':accountAppId/role')
+  @ApiOperation({ summary: 'Ubah Role Pengguna pada Aplikasi yang Sudah Di-mapping' })
+  async updateRole(@Param('accountAppId') accountAppId: string, @Body() dto: UpdateAppRoleDto) {
+    const result = await this.manageAccountAppUseCase.updateRole(accountAppId, dto.app_role);
+    return {
+      statusCode: HttpStatus.OK,
+      message: `Role pengguna berhasil diubah menjadi '${result.app_role}'`,
       data: result,
     };
   }
