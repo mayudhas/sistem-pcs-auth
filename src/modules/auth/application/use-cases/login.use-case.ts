@@ -19,10 +19,16 @@ export interface LoginResult {
   user: {
     auth_id: string;
     username: string;
-    app_id: string;
-    app_role: string;
-    is_superadmin?: boolean;
+    is_superadmin: boolean;
+    app_id?: string;
+    app_role?: string;
   };
+  accessible_apps: Array<{
+    app_id: string;
+    app_nama: string;
+    app_deskripsi: string | null;
+    app_role: string;
+  }>;
 }
 
 @Injectable()
@@ -39,7 +45,7 @@ export class LoginUseCase {
   ) {}
 
   async execute(dto: LoginDto): Promise<LoginResult> {
-    // 1. Validasi Akun
+    // 1. Validasi Akun Kredensial
     const account = await this.accountRepo.getByUsername(dto.username);
     if (!account || !account.auth_is_active) {
       throw new UnauthorizedException('Kredensial tidak valid atau akun dinonaktifkan');
@@ -51,24 +57,56 @@ export class LoginUseCase {
       throw new UnauthorizedException('Kredensial tidak valid');
     }
 
-    // 3. Validasi Target Aplikasi
-    const targetApp = await this.appRepo.getById(dto.app_id);
-    if (!targetApp || !targetApp.app_is_active) {
-      throw new ForbiddenException(`Aplikasi '${dto.app_id}' tidak ditemukan atau sedang tidak aktif`);
-    }
+    // 3. Ambil seluruh aplikasi yang berhak diakses oleh user ini
+    const userAssignments = await this.prisma.authAccountApp.findMany({
+      where: {
+        auth_id: account.auth_id,
+        is_active: true,
+        app: {
+          app_is_active: true,
+        },
+      },
+      include: {
+        app: true,
+      },
+    });
 
-    // 4. Validasi Hak Akses User ke Aplikasi (RBAC check)
-    const accessAssignment = await this.accountAppRepo.findByAuthIdAndAppId(account.auth_id, dto.app_id);
-    if (!accessAssignment || !accessAssignment.is_active) {
-      throw new ForbiddenException(`Anda tidak memiliki izin akses ke aplikasi '${targetApp.app_nama}'`);
+    const accessibleApps = userAssignments.map((ua) => ({
+      app_id: ua.app_id,
+      app_nama: ua.app.app_nama,
+      app_deskripsi: ua.app.app_deskripsi,
+      app_role: ua.app_role,
+    }));
+
+    // 4. Tentukan target app (jika dispesifikasi, validasi; jika tidak, default ke SSO portal)
+    let targetAudience = 'sso-portal';
+    let appRole = 'USER';
+
+    if (dto.app_id) {
+      const targetApp = await this.appRepo.getById(dto.app_id);
+      if (!targetApp || !targetApp.app_is_active) {
+        throw new ForbiddenException(`Aplikasi '${dto.app_id}' tidak ditemukan atau sedang tidak aktif`);
+      }
+
+      const match = userAssignments.find((ua) => ua.app_id === dto.app_id);
+      if (!match) {
+        throw new ForbiddenException(`Anda tidak memiliki izin akses ke aplikasi '${targetApp.app_nama}'`);
+      }
+
+      targetAudience = targetApp.app_id;
+      appRole = match.app_role;
+    } else {
+      if (account.auth_is_superadmin) {
+        appRole = 'SUPERADMIN';
+      }
     }
 
     // 5. Generate Asymmetric RS256 JWT
     const accessToken = await this.cryptoTokenService.signAccessToken({
       sub: account.auth_id,
       username: account.auth_username,
-      aud: targetApp.app_id,
-      app_role: accessAssignment.app_role,
+      aud: targetAudience,
+      app_role: appRole,
       is_superadmin: account.auth_is_superadmin,
     });
 
@@ -76,7 +114,7 @@ export class LoginUseCase {
     const refreshTokenRaw = uuidv7();
     const refreshTokenHash = await argon2.hash(refreshTokenRaw);
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 hari
+    expiresAt.setDate(expiresAt.getDate() + 7);
 
     await this.prisma.authSession.create({
       data: {
@@ -91,14 +129,15 @@ export class LoginUseCase {
       access_token: accessToken,
       refresh_token: refreshTokenRaw,
       token_type: 'Bearer',
-      expires_in: 900, // 15 menit (detik)
+      expires_in: 900,
       user: {
         auth_id: account.auth_id,
         username: account.auth_username,
-        app_id: targetApp.app_id,
-        app_role: accessAssignment.app_role,
         is_superadmin: account.auth_is_superadmin,
+        app_id: targetAudience,
+        app_role: appRole,
       },
+      accessible_apps: accessibleApps,
     };
   }
 }
