@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/infrastructure/database/prisma/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model AuthAccount {
+  auth_id            String           @id @db.Uuid
+  auth_username      String           @unique @db.VarChar(100)
+  auth_password_hash String           @db.VarChar(255)
+  auth_is_active     Boolean          @default(true)
+  auth_created_at    DateTime         @default(now()) @db.Timestamptz(6)
+  auth_updated_at    DateTime         @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  account_apps       AuthAccountApp[]
+  sessions           AuthSession[]
+
+  @@map("auth_account")
+}
+
+model AuthApp {
+  app_id            String           @id @db.VarChar(50)
+  app_nama          String           @db.VarChar(255)
+  app_deskripsi     String?          @db.Text
+  app_redirect_uri  String?          @db.VarChar(255)
+  app_is_active     Boolean          @default(true)
+  app_created_at    DateTime         @default(now()) @db.Timestamptz(6)
+  app_updated_at    DateTime         @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  account_apps      AuthAccountApp[]
+
+  @@map("auth_app")
+}
+
+model AuthAccountApp {
+  account_app_id String      @id @db.Uuid
+  auth_id        String      @db.Uuid
+  app_id         String      @db.VarChar(50)
+  app_role       String      @db.VarChar(50) // contoh: 'SUPERADMIN', 'ADMIN', 'VIEWER'
+  is_active      Boolean     @default(true)
+  created_at     DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime    @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  account        AuthAccount @relation(fields: [auth_id], references: [auth_id], onDelete: Cascade)
+  app            AuthApp     @relation(fields: [app_id], references: [app_id], onDelete: Cascade)
+
+  @@unique([auth_id, app_id])
+  @@index([auth_id])
+  @@index([app_id])
+  @@map("auth_account_app")
+}
+
+model AuthSession {
+  session_id         String      @id @db.Uuid
+  auth_id            String      @db.Uuid
+  refresh_token_hash String      @db.VarChar(255)
+  expires_at         DateTime    @db.Timestamptz(6)
+  is_revoked         Boolean     @default(false)
+  user_agent         String?     @db.VarChar(255)
+  ip_address         String?     @db.VarChar(50)
+  created_at         DateTime    @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  account            AuthAccount @relation(fields: [auth_id], references: [auth_id], onDelete: Cascade)
+
+  @@index([auth_id])
+  @@map("auth_session")
+}
