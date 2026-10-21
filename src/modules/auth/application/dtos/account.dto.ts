@@ -12,6 +12,9 @@ export class CreateAccountDto {
   @IsNotEmpty()
   @MinLength(6)
   password: string;
+
+  @ApiProperty({ example: false, description: 'Apakah akun ini Superadmin SSO?', required: false, default: false })
+  is_superadmin?: boolean;
 }
 
 export class ResetPasswordDto {

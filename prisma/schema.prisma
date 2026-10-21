@@ -11,6 +11,7 @@ model AuthAccount {
   auth_id            String           @id @db.Uuid
   auth_username      String           @unique @db.VarChar(100)
   auth_password_hash String           @db.VarChar(255)
+  auth_is_superadmin Boolean          @default(false) // Superadmin SSO/Web Auth pusat
   auth_is_active     Boolean          @default(true)
   auth_created_at    DateTime         @default(now()) @db.Timestamptz(6)
   auth_updated_at    DateTime         @updatedAt @db.Timestamptz(6)

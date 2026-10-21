@@ -21,6 +21,7 @@ export interface LoginResult {
     username: string;
     app_id: string;
     app_role: string;
+    is_superadmin?: boolean;
   };
 }
 
@@ -68,6 +69,7 @@ export class LoginUseCase {
       username: account.auth_username,
       aud: targetApp.app_id,
       app_role: accessAssignment.app_role,
+      is_superadmin: account.auth_is_superadmin,
     });
 
     // 6. Buat Refresh Token & Simpan Session
@@ -95,6 +97,7 @@ export class LoginUseCase {
         username: account.auth_username,
         app_id: targetApp.app_id,
         app_role: accessAssignment.app_role,
+        is_superadmin: account.auth_is_superadmin,
       },
     };
   }

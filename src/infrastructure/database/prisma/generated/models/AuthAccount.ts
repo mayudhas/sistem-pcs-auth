@@ -28,6 +28,7 @@ export type AuthAccountMinAggregateOutputType = {
   auth_id: string | null
   auth_username: string | null
   auth_password_hash: string | null
+  auth_is_superadmin: boolean | null
   auth_is_active: boolean | null
   auth_created_at: Date | null
   auth_updated_at: Date | null
@@ -37,6 +38,7 @@ export type AuthAccountMaxAggregateOutputType = {
   auth_id: string | null
   auth_username: string | null
   auth_password_hash: string | null
+  auth_is_superadmin: boolean | null
   auth_is_active: boolean | null
   auth_created_at: Date | null
   auth_updated_at: Date | null
@@ -46,6 +48,7 @@ export type AuthAccountCountAggregateOutputType = {
   auth_id: number
   auth_username: number
   auth_password_hash: number
+  auth_is_superadmin: number
   auth_is_active: number
   auth_created_at: number
   auth_updated_at: number
@@ -57,6 +60,7 @@ export type AuthAccountMinAggregateInputType = {
   auth_id?: true
   auth_username?: true
   auth_password_hash?: true
+  auth_is_superadmin?: true
   auth_is_active?: true
   auth_created_at?: true
   auth_updated_at?: true
@@ -66,6 +70,7 @@ export type AuthAccountMaxAggregateInputType = {
   auth_id?: true
   auth_username?: true
   auth_password_hash?: true
+  auth_is_superadmin?: true
   auth_is_active?: true
   auth_created_at?: true
   auth_updated_at?: true
@@ -75,6 +80,7 @@ export type AuthAccountCountAggregateInputType = {
   auth_id?: true
   auth_username?: true
   auth_password_hash?: true
+  auth_is_superadmin?: true
   auth_is_active?: true
   auth_created_at?: true
   auth_updated_at?: true
@@ -157,6 +163,7 @@ export type AuthAccountGroupByOutputType = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin: boolean
   auth_is_active: boolean
   auth_created_at: Date
   auth_updated_at: Date
@@ -187,6 +194,7 @@ export type AuthAccountWhereInput = {
   auth_id?: Prisma.UuidFilter<"AuthAccount"> | string
   auth_username?: Prisma.StringFilter<"AuthAccount"> | string
   auth_password_hash?: Prisma.StringFilter<"AuthAccount"> | string
+  auth_is_superadmin?: Prisma.BoolFilter<"AuthAccount"> | boolean
   auth_is_active?: Prisma.BoolFilter<"AuthAccount"> | boolean
   auth_created_at?: Prisma.DateTimeFilter<"AuthAccount"> | Date | string
   auth_updated_at?: Prisma.DateTimeFilter<"AuthAccount"> | Date | string
@@ -198,6 +206,7 @@ export type AuthAccountOrderByWithRelationInput = {
   auth_id?: Prisma.SortOrder
   auth_username?: Prisma.SortOrder
   auth_password_hash?: Prisma.SortOrder
+  auth_is_superadmin?: Prisma.SortOrder
   auth_is_active?: Prisma.SortOrder
   auth_created_at?: Prisma.SortOrder
   auth_updated_at?: Prisma.SortOrder
@@ -212,6 +221,7 @@ export type AuthAccountWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.AuthAccountWhereInput[]
   NOT?: Prisma.AuthAccountWhereInput | Prisma.AuthAccountWhereInput[]
   auth_password_hash?: Prisma.StringFilter<"AuthAccount"> | string
+  auth_is_superadmin?: Prisma.BoolFilter<"AuthAccount"> | boolean
   auth_is_active?: Prisma.BoolFilter<"AuthAccount"> | boolean
   auth_created_at?: Prisma.DateTimeFilter<"AuthAccount"> | Date | string
   auth_updated_at?: Prisma.DateTimeFilter<"AuthAccount"> | Date | string
@@ -223,6 +233,7 @@ export type AuthAccountOrderByWithAggregationInput = {
   auth_id?: Prisma.SortOrder
   auth_username?: Prisma.SortOrder
   auth_password_hash?: Prisma.SortOrder
+  auth_is_superadmin?: Prisma.SortOrder
   auth_is_active?: Prisma.SortOrder
   auth_created_at?: Prisma.SortOrder
   auth_updated_at?: Prisma.SortOrder
@@ -238,6 +249,7 @@ export type AuthAccountScalarWhereWithAggregatesInput = {
   auth_id?: Prisma.UuidWithAggregatesFilter<"AuthAccount"> | string
   auth_username?: Prisma.StringWithAggregatesFilter<"AuthAccount"> | string
   auth_password_hash?: Prisma.StringWithAggregatesFilter<"AuthAccount"> | string
+  auth_is_superadmin?: Prisma.BoolWithAggregatesFilter<"AuthAccount"> | boolean
   auth_is_active?: Prisma.BoolWithAggregatesFilter<"AuthAccount"> | boolean
   auth_created_at?: Prisma.DateTimeWithAggregatesFilter<"AuthAccount"> | Date | string
   auth_updated_at?: Prisma.DateTimeWithAggregatesFilter<"AuthAccount"> | Date | string
@@ -247,6 +259,7 @@ export type AuthAccountCreateInput = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: Date | string
   auth_updated_at?: Date | string
@@ -258,6 +271,7 @@ export type AuthAccountUncheckedCreateInput = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: Date | string
   auth_updated_at?: Date | string
@@ -269,6 +283,7 @@ export type AuthAccountUpdateInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -280,6 +295,7 @@ export type AuthAccountUncheckedUpdateInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -291,6 +307,7 @@ export type AuthAccountCreateManyInput = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: Date | string
   auth_updated_at?: Date | string
@@ -300,6 +317,7 @@ export type AuthAccountUpdateManyMutationInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -309,6 +327,7 @@ export type AuthAccountUncheckedUpdateManyInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -318,6 +337,7 @@ export type AuthAccountCountOrderByAggregateInput = {
   auth_id?: Prisma.SortOrder
   auth_username?: Prisma.SortOrder
   auth_password_hash?: Prisma.SortOrder
+  auth_is_superadmin?: Prisma.SortOrder
   auth_is_active?: Prisma.SortOrder
   auth_created_at?: Prisma.SortOrder
   auth_updated_at?: Prisma.SortOrder
@@ -327,6 +347,7 @@ export type AuthAccountMaxOrderByAggregateInput = {
   auth_id?: Prisma.SortOrder
   auth_username?: Prisma.SortOrder
   auth_password_hash?: Prisma.SortOrder
+  auth_is_superadmin?: Prisma.SortOrder
   auth_is_active?: Prisma.SortOrder
   auth_created_at?: Prisma.SortOrder
   auth_updated_at?: Prisma.SortOrder
@@ -336,6 +357,7 @@ export type AuthAccountMinOrderByAggregateInput = {
   auth_id?: Prisma.SortOrder
   auth_username?: Prisma.SortOrder
   auth_password_hash?: Prisma.SortOrder
+  auth_is_superadmin?: Prisma.SortOrder
   auth_is_active?: Prisma.SortOrder
   auth_created_at?: Prisma.SortOrder
   auth_updated_at?: Prisma.SortOrder
@@ -390,6 +412,7 @@ export type AuthAccountCreateWithoutAccount_appsInput = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: Date | string
   auth_updated_at?: Date | string
@@ -400,6 +423,7 @@ export type AuthAccountUncheckedCreateWithoutAccount_appsInput = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: Date | string
   auth_updated_at?: Date | string
@@ -426,6 +450,7 @@ export type AuthAccountUpdateWithoutAccount_appsInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -436,6 +461,7 @@ export type AuthAccountUncheckedUpdateWithoutAccount_appsInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -446,6 +472,7 @@ export type AuthAccountCreateWithoutSessionsInput = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: Date | string
   auth_updated_at?: Date | string
@@ -456,6 +483,7 @@ export type AuthAccountUncheckedCreateWithoutSessionsInput = {
   auth_id: string
   auth_username: string
   auth_password_hash: string
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: Date | string
   auth_updated_at?: Date | string
@@ -482,6 +510,7 @@ export type AuthAccountUpdateWithoutSessionsInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -492,6 +521,7 @@ export type AuthAccountUncheckedUpdateWithoutSessionsInput = {
   auth_id?: Prisma.StringFieldUpdateOperationsInput | string
   auth_username?: Prisma.StringFieldUpdateOperationsInput | string
   auth_password_hash?: Prisma.StringFieldUpdateOperationsInput | string
+  auth_is_superadmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth_created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auth_updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -542,6 +572,7 @@ export type AuthAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   auth_id?: boolean
   auth_username?: boolean
   auth_password_hash?: boolean
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: boolean
   auth_updated_at?: boolean
@@ -554,6 +585,7 @@ export type AuthAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   auth_id?: boolean
   auth_username?: boolean
   auth_password_hash?: boolean
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: boolean
   auth_updated_at?: boolean
@@ -563,6 +595,7 @@ export type AuthAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   auth_id?: boolean
   auth_username?: boolean
   auth_password_hash?: boolean
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: boolean
   auth_updated_at?: boolean
@@ -572,12 +605,13 @@ export type AuthAccountSelectScalar = {
   auth_id?: boolean
   auth_username?: boolean
   auth_password_hash?: boolean
+  auth_is_superadmin?: boolean
   auth_is_active?: boolean
   auth_created_at?: boolean
   auth_updated_at?: boolean
 }
 
-export type AuthAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"auth_id" | "auth_username" | "auth_password_hash" | "auth_is_active" | "auth_created_at" | "auth_updated_at", ExtArgs["result"]["authAccount"]>
+export type AuthAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"auth_id" | "auth_username" | "auth_password_hash" | "auth_is_superadmin" | "auth_is_active" | "auth_created_at" | "auth_updated_at", ExtArgs["result"]["authAccount"]>
 export type AuthAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account_apps?: boolean | Prisma.AuthAccount$account_appsArgs<ExtArgs>
   sessions?: boolean | Prisma.AuthAccount$sessionsArgs<ExtArgs>
@@ -596,6 +630,7 @@ export type $AuthAccountPayload<ExtArgs extends runtime.Types.Extensions.Interna
     auth_id: string
     auth_username: string
     auth_password_hash: string
+    auth_is_superadmin: boolean
     auth_is_active: boolean
     auth_created_at: Date
     auth_updated_at: Date
@@ -1027,6 +1062,7 @@ export interface AuthAccountFieldRefs {
   readonly auth_id: Prisma.FieldRef<"AuthAccount", 'String'>
   readonly auth_username: Prisma.FieldRef<"AuthAccount", 'String'>
   readonly auth_password_hash: Prisma.FieldRef<"AuthAccount", 'String'>
+  readonly auth_is_superadmin: Prisma.FieldRef<"AuthAccount", 'Boolean'>
   readonly auth_is_active: Prisma.FieldRef<"AuthAccount", 'Boolean'>
   readonly auth_created_at: Prisma.FieldRef<"AuthAccount", 'DateTime'>
   readonly auth_updated_at: Prisma.FieldRef<"AuthAccount", 'DateTime'>

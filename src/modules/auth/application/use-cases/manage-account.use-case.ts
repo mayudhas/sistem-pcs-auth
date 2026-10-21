@@ -24,6 +24,7 @@ export class ManageAccountUseCase {
       auth_id: uuidv7(),
       auth_username: dto.username,
       auth_password_hash: passwordHash,
+      auth_is_superadmin: Boolean(dto.is_superadmin),
       auth_is_active: true,
       auth_created_at: new Date(),
       auth_updated_at: new Date(),

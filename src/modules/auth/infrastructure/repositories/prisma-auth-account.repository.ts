@@ -35,6 +35,7 @@ export class PrismaAuthAccountRepository implements AuthAccountRepository {
       data: {
         auth_username: data.auth_username,
         auth_password_hash: data.auth_password_hash,
+        auth_is_superadmin: data.auth_is_superadmin,
         auth_is_active: data.auth_is_active,
         auth_updated_at: new Date(),
       },

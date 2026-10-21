@@ -77,6 +77,7 @@ export const AuthAccountScalarFieldEnum = {
   auth_id: 'auth_id',
   auth_username: 'auth_username',
   auth_password_hash: 'auth_password_hash',
+  auth_is_superadmin: 'auth_is_superadmin',
   auth_is_active: 'auth_is_active',
   auth_created_at: 'auth_created_at',
   auth_updated_at: 'auth_updated_at'

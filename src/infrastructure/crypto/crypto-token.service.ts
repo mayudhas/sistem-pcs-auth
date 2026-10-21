@@ -9,6 +9,7 @@ export interface TokenPayload {
   username: string;
   aud: string;
   app_role: string;
+  is_superadmin?: boolean;
 }
 
 @Injectable()
@@ -43,6 +44,7 @@ export class CryptoTokenService implements OnModuleInit {
     return new SignJWT({
       username: payload.username,
       app_role: payload.app_role,
+      is_superadmin: Boolean(payload.is_superadmin),
     })
       .setProtectedHeader({ alg: 'RS256', kid: 'pcs-sso-key-1' })
       .setIssuer(this.issuer)
