@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateAccountDto {
   @ApiProperty({ example: 'budi_santoso', description: 'Username akun' })
@@ -14,6 +14,8 @@ export class CreateAccountDto {
   password: string;
 
   @ApiProperty({ example: false, description: 'Apakah akun ini Superadmin SSO?', required: false, default: false })
+  @IsBoolean()
+  @IsOptional()
   is_superadmin?: boolean;
 }
 
