@@ -85,12 +85,13 @@ export class RefreshTokenUseCase {
       },
     });
 
-    // 4. Sign Access Token baru
+    // 4. Sign Access Token baru (sertakan is_superadmin sama seperti login)
     const newAccessToken = await this.cryptoTokenService.signAccessToken({
       sub: account.auth_id,
       username: account.auth_username,
       aud: app.app_id,
       app_role: access.app_role,
+      is_superadmin: account.auth_is_superadmin,
     });
 
     return {
