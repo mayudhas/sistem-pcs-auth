@@ -10,14 +10,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# OS
+# OS & IDE
 .DS_Store
-
-# Tests
-/coverage
-/.nyc_output
-
-# IDEs and editors
+Thumbs.db
 /.idea
 .project
 .classpath
@@ -25,20 +20,26 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
-
-# IDE - VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# Tests
+/coverage
+/.nyc_output
+
 # Environment
 .env
 .env.*
+!.env.example
 
 # TypeScript cache
 *.tsbuildinfo
 
 # RSA Keys
 keys/private_key.pem
+
+# Docker local overrides
+docker-compose.override.yml
