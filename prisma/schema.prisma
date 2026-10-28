@@ -90,5 +90,6 @@ model AuthSession {
   account            AuthAccount @relation(fields: [auth_id], references: [auth_id], onDelete: Cascade)
 
   @@index([auth_id])
+  @@index([refresh_token_hash])
   @@map("auth_session")
 }

@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException, ForbiddenException, Inject } from '@nestjs/common';
 import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
 import { v7 as uuidv7 } from 'uuid';
 import { CryptoTokenService } from '../../../../infrastructure/crypto/crypto-token.service';
 import { PrismaService } from '../../../../infrastructure/database/prisma/prisma.service';
@@ -110,11 +111,20 @@ export class LoginUseCase {
       is_superadmin: account.auth_is_superadmin,
     });
 
-    // 6. Buat Refresh Token & Simpan Session
+    // 6. Buat Refresh Token & Simpan Session (SHA-256 hash untuk fast O(1) indexed lookup)
     const refreshTokenRaw = uuidv7();
-    const refreshTokenHash = await argon2.hash(refreshTokenRaw);
+    const refreshTokenHash = crypto.createHash('sha256').update(refreshTokenRaw).digest('hex');
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
+
+    // Bersihkan sesi aktif lama pengguna untuk mencegah penumpukan
+    await this.prisma.authSession.updateMany({
+      where: {
+        auth_id: account.auth_id,
+        is_revoked: false,
+      },
+      data: { is_revoked: true },
+    });
 
     await this.prisma.authSession.create({
       data: {

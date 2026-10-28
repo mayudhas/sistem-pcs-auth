@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException, ForbiddenException, Inject } from '@nestjs/common';
 import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
 import { v7 as uuidv7 } from 'uuid';
 import { CryptoTokenService } from '../../../../infrastructure/crypto/crypto-token.service';
 import { PrismaService } from '../../../../infrastructure/database/prisma/prisma.service';
@@ -25,9 +26,12 @@ export class RefreshTokenUseCase {
   ) {}
 
   async execute(dto: RefreshTokenDto) {
-    // 1. Cari active session yang belum expired & belum revoked
-    const sessions = await this.prisma.authSession.findMany({
+    // 1. Cari active session langsung via indexed hash O(1) (fallback ke argon2 untuk backward-compatibility)
+    const tokenHash = crypto.createHash('sha256').update(dto.refresh_token).digest('hex');
+
+    let matchedSession = await this.prisma.authSession.findFirst({
       where: {
+        refresh_token_hash: tokenHash,
         is_revoked: false,
         expires_at: { gt: new Date() },
       },
@@ -36,12 +40,25 @@ export class RefreshTokenUseCase {
       },
     });
 
-    let matchedSession = null;
-    for (const session of sessions) {
-      const match = await argon2.verify(session.refresh_token_hash, dto.refresh_token);
-      if (match) {
-        matchedSession = session;
-        break;
+    // Fallback verifikasi jika ada sesi lama yang menggunakan argon2
+    if (!matchedSession) {
+      const legacySessions = await this.prisma.authSession.findMany({
+        where: {
+          is_revoked: false,
+          expires_at: { gt: new Date() },
+          refresh_token_hash: { startsWith: '$argon2' },
+        },
+        include: {
+          account: true,
+        },
+      });
+
+      for (const session of legacySessions) {
+        const match = await argon2.verify(session.refresh_token_hash, dto.refresh_token);
+        if (match) {
+          matchedSession = session;
+          break;
+        }
       }
     }
 
@@ -72,7 +89,7 @@ export class RefreshTokenUseCase {
     });
 
     const newRefreshToken = uuidv7();
-    const newRefreshTokenHash = await argon2.hash(newRefreshToken);
+    const newRefreshTokenHash = crypto.createHash('sha256').update(newRefreshToken).digest('hex');
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 
